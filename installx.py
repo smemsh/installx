@@ -12,7 +12,7 @@ installs in-dir exe files and symlinks, or all .rclinks, to [homedir]
     descendants of ${1:-.}/ and the end target is in ${1:-.}/
 
 """
-__url__     = 'https://github.com/smemsh/utilpy/'
+__url__     = 'https://github.com/smemsh/installx/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
 
