@@ -15,8 +15,12 @@ installs in-dir exe files and symlinks, or all .rclinks, to [homedir]
 __url__     = 'https://github.com/smemsh/installx/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
+__devskel__ = 0x8c1992e
 
 import argparse
+
+from sys import exit, hexversion
+if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
 
 from termios import tcgetattr, tcsetattr, TCSADRAIN
 from shutil import copy
@@ -353,24 +357,29 @@ def main():
 
 if __name__ == "__main__":
 
-    from sys import version_info as pyv
-    if pyv.major < 3 or pyv.major == 3 and pyv.minor < 9:
-        bomb("minimum python 3.9")
-
     invname = basename(argv[0])
     args = argv[1:]
 
-    try:
-        from bdb import BdbQuit
-        if bool(environ['DEBUG']):
-            from pprint import pprint as pp
-            debug = True
-            err('debug-mode-enabled')
-        else:
-            raise KeyError
-
-    except KeyError:
-        debug = False
+    from bdb import BdbQuit
+    if debug := int(getenv('DEBUG') or 0):
+        import pdb
+        from pprint import pp
+        err('debug: enabled')
+        unsetenv('DEBUG')  # otherwise forked children hang
 
     try: main()
-    except BdbQuit: bomb("debug-stop")
+    except BdbQuit: bomb("debug: stop")
+    except SystemExit: raise
+    except KeyboardInterrupt: bomb("interrupted")
+    except:
+        print_exc(file=stderr)
+        if debug: pdb.post_mortem()
+        else: bomb("aborting...")
+    finally:  # cpython bug 55589
+        try: stdout.flush()
+        finally:
+            try: stdout.close()
+            finally:
+                try: stderr.flush()
+                except: pass
+                finally: stderr.close()
