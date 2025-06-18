@@ -15,20 +15,20 @@ installs in-dir exe files and symlinks, or all .rclinks, to [homedir]
 __url__     = 'https://github.com/smemsh/installx/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = 0x8c1992e
+__devskel__ = '0.7.1'
 
 import argparse
 
 from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
 
-from termios import tcgetattr, tcsetattr, TCSADRAIN
-from shutil import copy
-from sys import argv, stdin, stdout, stderr, exit
-from tty import setraw
 from re import search
+from tty import setraw
+from sys import argv, stdin, stdout, stderr, exit
 from stat import S_IFLNK
+from shutil import copy
 from hashlib import sha256
+from termios import tcgetattr, tcsetattr, TCSADRAIN
 
 from os.path import (
     join, expanduser,
