@@ -29,6 +29,7 @@ from stat import S_IFLNK
 from shutil import copy
 from hashlib import sha256
 from termios import tcgetattr, tcsetattr, TCSADRAIN
+from traceback import print_exc
 
 from os.path import (
     join, expanduser,
