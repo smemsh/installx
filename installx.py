@@ -363,7 +363,7 @@ def main():
         print_execution_stats(src, dst, counts)
 
     if args.status:
-        exit(EXIT_UPDATED if counts[0] or counts[1] else EXIT_SUCCESS)
+        exit(EXIT_UPDATED if any(counts[0:-1]) else EXIT_SUCCESS)
 
 ###
 
