@@ -15,7 +15,7 @@ installs in-dir exe files and symlinks, or all .rclinks, to [homedir]
 __url__     = 'https://github.com/smemsh/installx/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.7.1'
+__devskel__ = '0.7.2'
 
 import argparse
 
@@ -80,6 +80,9 @@ def process_args():
     def addarg(p, vname, vdesc, help=None, /, **kwargs):
         p.add_argument(vname, metavar=vdesc, help=help, **kwargs)
 
+    def addnarg(*args, **kwargs):
+        addarg(*args, nargs='?', **kwargs)
+
     def getchar():
         fd = stdin.fileno()
         tattrs = tcgetattr(fd)
@@ -98,8 +101,8 @@ def process_args():
     addflag (p, 'q', 'quiet', "no output for most actions")
     addflag (p, 'f', 'force', "don't ask confirmation of source and dest")
     addflag (p, 'u', 'unchanged', "overwrite unchanged files", dest='nocheck')
-    addarg  (p, 'src', 'srcdir', "install from [cwd]")
-    addarg  (p, 'dest', 'destdir', f"install to [{defaultdest[invname]}]")
+    addnarg (p, 'src', 'srcdir', "install from [cwd]")
+    addnarg (p, 'dest', 'destdir', f"install to [{defaultdest[invname]}]")
 
     args = p.parse_args(args)
 
