@@ -47,6 +47,7 @@ from os import (
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE,
 )
+EXIT_UPDATED = 1  # for --status
 
 ###
 
@@ -100,6 +101,7 @@ def process_args():
     addflag (p, 'n', 'test', "only show intended actions", dest='dryrun')
     addflag (p, 'q', 'quiet', "no output for most actions")
     addflag (p, 'f', 'force', "don't ask confirmation of source and dest")
+    addflag (p, 's', 'status', "exit status: 0=nochange, 1=change, else errors")
     addflag (p, 'u', 'unchanged', "overwrite unchanged files", dest='nocheck')
     addnarg (p, 'src', 'srcdir', "install from [cwd]")
     addnarg (p, 'dest', 'destdir', f"install to [{defaultdest[invname]}]")
@@ -359,6 +361,9 @@ def main():
 
     if not args.quiet:
         print_execution_stats(src, dst, counts)
+
+    if args.status:
+        exit(EXIT_UPDATED if counts[0] or counts[1] else EXIT_SUCCESS)
 
 ###
 
